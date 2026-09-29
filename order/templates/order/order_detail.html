@@ -1,0 +1,187 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+
+    <title>Order #{{ order.id }}</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        .status {
+            padding: 5px 12px;
+            border-radius: 5px;
+            background: #eee;
+        }
+
+        .payment-section {
+            margin-top: 30px;
+        }
+
+        .razorpay {
+            background: #f7f7f7;
+            padding: 15px;
+            border-radius: 6px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Order #{{ order.id }}</h1>
+
+
+    <!-- Order Information -->
+
+    <div class="row">
+
+        <span class="label">
+            Order ID
+        </span>
+
+        <span>
+            {{ order.id }}
+        </span>
+
+    </div>
+
+
+    <div class="row">
+
+        <span class="label">
+            Customer
+        </span>
+
+        <span>
+            {{ order.user.username }}
+        </span>
+
+    </div>
+
+
+    <div class="row">
+
+        <span class="label">
+            Total Amount
+        </span>
+
+        <span>
+            ₹{{ order.total_amount }}
+        </span>
+
+    </div>
+
+
+    <div class="row">
+
+        <span class="label">
+            Order Status
+        </span>
+
+        <span class="status">
+            {{ order.status }}
+        </span>
+
+    </div>
+
+
+    <div class="row">
+
+        <span class="label">
+            Payment Status
+        </span>
+
+        <span class="status">
+            {{ order.payment_status }}
+        </span>
+
+    </div>
+
+
+    <div class="row">
+
+        <span class="label">
+            Created At
+        </span>
+
+        <span>
+            {{ order.created_at }}
+        </span>
+
+    </div>
+
+
+    <!-- Razorpay Information -->
+
+    <div class="payment-section">
+
+        <h2>Payment Information</h2>
+
+        <div class="razorpay">
+
+            <div class="row">
+
+                <span class="label">
+                    Razorpay Order ID
+                </span>
+
+                <span>
+                    {{ order.razorpay_order_id|default:"-" }}
+                </span>
+
+            </div>
+
+
+            <div class="row">
+
+                <span class="label">
+                    Razorpay Payment ID
+                </span>
+
+                <span>
+                    {{ order.razorpay_payment_id|default:"-" }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```

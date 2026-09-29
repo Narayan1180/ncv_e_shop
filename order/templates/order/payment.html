@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+</head>
+
+<body>
+
+<h2>Order #{{ order.id }}</h2>
+
+<p>Amount: ₹{{ order.total_amount }}</p>
+
+<button id="pay-button">
+    Pay Now
+</button>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+
+document.getElementById("pay-button").onclick = function () {
+
+    const options = {
+
+        key: "{{ razorpay_key_id }}",
+
+        amount: "{{ order.total_amount|floatformat:0 }}00",
+
+        currency: "INR",
+
+        order_id: "{{ razorpay_order_id }}",
+
+        name: "My Ecommerce",
+
+        description: "Order #{{ order.id }}",
+
+        handler: function(response) {
+
+            console.log("PAYMENT SUCCESS");
+            console.log(response);
+
+            // Send Razorpay payment details to Django
+            const formData = new FormData();
+
+            formData.append(
+                "razorpay_payment_id",
+                response.razorpay_payment_id
+            );
+
+            formData.append(
+                "razorpay_order_id",
+                response.razorpay_order_id
+            );
+
+            formData.append(
+                "razorpay_signature",
+                response.razorpay_signature
+            );
+
+            fetch(
+                "{% url 'verify_payment' order.id %}",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+
+                    body: formData
+                }
+            )
+            .then(response => response.json())
+            .then(data => {
+
+                if (data.success) {
+
+                    console.log("PAYMENT VERIFIED");
+
+                    // Backend verified the Razorpay signature
+                    window.location.href = data.redirect_url;
+
+                } else {
+
+                    console.log("PAYMENT VERIFICATION FAILED");
+                    console.log(data.error);
+
+                    // Stay/return on the payment page
+                    window.location.href ="{% url 'payment_page' order.id %}";
+                }
+            })
+            .catch(error => {
+
+                console.error(
+                    "Verification request failed:",
+                    error
+                );
+
+                // Verification request itself failed
+                window.location.href =
+                    "{% url 'payment_page' order.id %}";
+            });
+        }
+    };
+
+
+    const rzp = new Razorpay(options);
+
+
+    // Razorpay checkout/payment failure
+    rzp.on("payment.failed", function(response) {
+
+        console.log("PAYMENT FAILED");
+        console.log(response.error);
+
+        // Return to the same payment page
+        window.location.href =
+            "{% url 'payment_page' order.id %}";
+    });
+
+
+    rzp.open();
+};
+
+</script>
+
+</body>
+</html>
+```

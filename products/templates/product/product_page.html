@@ -1,0 +1,721 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ShopKart</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #eaeded;
+            color: #111;
+        }
+
+        /* ================= NAVBAR ================= */
+
+        .navbar {
+            height: 64px;
+            background: #131921;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 25px;
+            gap: 22px;
+        }
+
+        .logo {
+            font-size: 27px;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #ff9900;
+        }
+
+        .location {
+            font-size: 12px;
+            color: #ddd;
+        }
+
+        .location strong {
+            display: block;
+            font-size: 14px;
+            color: white;
+        }
+
+        /* Search */
+
+        .search {
+            flex: 1;
+            height: 42px;
+            display: flex;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .search select {
+            width: 65px;
+            border: none;
+            background: #eee;
+            padding: 0 8px;
+        }
+
+        .search input {
+            flex: 1;
+            border: none;
+            padding: 0 15px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .search button {
+            width: 55px;
+            border: none;
+            background: #febd69;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .nav-item {
+            white-space: nowrap;
+            font-size: 12px;
+        }
+
+        .nav-item strong {
+            display: block;
+            font-size: 14px;
+        }
+
+        .cart {
+            font-size: 28px;
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -8px;
+            background: #ff9900;
+            color: #111;
+            border-radius: 50%;
+            width: 19px;
+            height: 19px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ================= CATEGORY BAR ================= */
+
+        .category-bar {
+            background: #232f3e;
+            height: 45px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 0 25px;
+            font-size: 14px;
+        }
+
+        .category-bar a {
+            color: white;
+            text-decoration: none;
+        }
+
+        /* ================= HERO ================= */
+
+        .hero {
+            height: 360px;
+            background:
+                linear-gradient(
+                    to bottom,
+                    rgba(0,0,0,0.05),
+                    rgba(234,237,237,1)
+                ),
+                url("https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da")
+                center/cover;
+
+            display: flex;
+            align-items: center;
+            padding: 50px;
+        }
+
+        .hero-content {
+            max-width: 520px;
+        }
+
+        .hero-content h1 {
+            font-size: 42px;
+            margin-bottom: 15px;
+        }
+
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 25px;
+        }
+
+        .hero-btn {
+            background: #ff9900;
+            border: none;
+            padding: 13px 25px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* ================= CONTENT ================= */
+
+        .container {
+            max-width: 1450px;
+            margin: auto;
+            padding: 0 25px;
+        }
+
+        .section {
+            margin-top: 25px;
+        }
+
+        .section-title {
+            font-size: 25px;
+            margin-bottom: 15px;
+        }
+
+        /* ================= PRODUCT GRID ================= */
+
+        .products {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
+        }
+
+        .product-card {
+            background: white;
+            padding: 18px;
+            border-radius: 5px;
+            transition: 0.2s;
+            position: relative;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 5px 18px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 210px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            max-height: 200px;
+            object-fit: contain;
+        }
+
+        .product-name {
+            font-size: 16px;
+            font-weight: 500;
+            min-height: 45px;
+        }
+
+        .rating {
+            margin: 8px 0;
+            color: #ffa41c;
+        }
+
+        .rating span {
+            color: #555;
+            font-size: 13px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .old-price {
+            color: #777;
+            text-decoration: line-through;
+            font-size: 13px;
+            margin-left: 7px;
+        }
+
+        .discount {
+            color: #cc0c39;
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .add-cart {
+            width: 100%;
+            margin-top: 14px;
+            padding: 10px;
+            border: none;
+            border-radius: 20px;
+            background: #ffd814;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .add-cart:hover {
+            background: #f7ca00;
+        }
+
+        /* ================= CATEGORY CARDS ================= */
+
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .category-card {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+
+        .category-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        .category-card h3 {
+            margin-top: 10px;
+        }
+
+        /* ================= FOOTER ================= */
+
+        footer {
+            background: #131921;
+            color: white;
+            margin-top: 45px;
+            padding: 45px 8%;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        footer h3 {
+            margin-bottom: 15px;
+        }
+
+        footer p {
+            color: #ddd;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+
+        /* ================= RESPONSIVE ================= */
+
+        @media(max-width: 900px) {
+
+            .location {
+                display: none;
+            }
+
+            .navbar {
+                gap: 10px;
+                padding: 0 12px;
+            }
+
+            .categories {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .category-bar {
+                overflow-x: auto;
+            }
+
+            .hero {
+                height: 300px;
+                padding: 30px;
+            }
+        }
+
+        @media(max-width: 600px) {
+
+            .navbar {
+                flex-wrap: wrap;
+                height: auto;
+                padding: 12px;
+            }
+
+            .search {
+                order: 5;
+                flex-basis: 100%;
+            }
+
+            .nav-item {
+                display: none;
+            }
+
+            .hero-content h1 {
+                font-size: 30px;
+            }
+
+            .categories {
+                grid-template-columns: 1fr;
+            }
+
+            .products {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar">
+
+    <a href="/" class="logo">
+        Shop<span>Kart</span>
+    </a>
+
+    <div class="location">
+        Deliver to
+        <strong>India</strong>
+    </div>
+
+    <form class="search">
+        <select>
+            <option>All</option>
+            <option>Electronics</option>
+            <option>Fashion</option>
+            <option>Home</option>
+        </select>
+
+        <input
+            type="text"
+            placeholder="Search products..."
+        >
+
+        <button type="submit">
+            🔍
+        </button>
+    </form>
+
+    <div class="nav-item">
+        Hello, Sign in
+        <strong>Account & Lists</strong>
+    </div>
+
+    <div class="nav-item">
+        <span>Returns</span>
+        <strong>& Orders</strong>
+    </div>
+
+    <div class="cart">
+        🛒
+        <span class="cart-count">0</span>
+    </div>
+
+</nav>
+
+
+<!-- ================= CATEGORY BAR ================= -->
+
+<div class="category-bar">
+
+    <strong>☰ All</strong>
+
+    <a href="#">Today's Deals</a>
+    <a href="#">Electronics</a>
+    <a href="#">Fashion</a>
+    <a href="#">Home & Kitchen</a>
+    <a href="#">Mobiles</a>
+    <a href="#">Books</a>
+    <a href="#">Customer Service</a>
+
+</div>
+
+
+<!-- ================= HERO ================= -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Everything you need,
+            delivered fast.
+        </h1>
+
+        <p>
+            Discover amazing products at incredible prices.
+        </p>
+
+        <button class="hero-btn">
+            Shop Now
+        </button>
+
+    </div>
+
+</section>
+
+
+<div class="container">
+
+    <!-- ================= CATEGORIES ================= -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Shop by Category
+        </h2>
+
+        <div class="categories">
+
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30">
+                <h3>Electronics</h3>
+            </div>
+
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8">
+                <h3>Fashion</h3>
+            </div>
+
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc">
+                <h3>Home</h3>
+            </div>
+
+            <div class="category-card">
+                <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d">
+                <h3>Books</h3>
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= PRODUCTS ================= -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Today's Deals
+        </h2>
+
+        <div class="products">
+
+            {% for product in products %}
+
+            <div class="product-card">
+
+                <div class="product-image">
+
+                    {% if product.image %}
+                        <img
+                            src="{{ product.image.url }}"
+                            alt="{{ product.name }}"
+                        >
+                    {% else %}
+                        <img
+                            src="https://via.placeholder.com/250"
+                            alt="{{ product.name }}"
+                        >
+                    {% endif %}
+
+                </div>
+
+                <div class="product-name">
+                    {{ product.name }}
+                </div>
+
+                <div class="rating">
+                    ★★★★☆
+                    <span>(124)</span>
+                </div>
+
+                <div>
+
+                    <span class="price">
+                        ₹{{ product.price }}
+                    </span>
+
+                    {% if product.discount %}
+                        <span class="old-price">
+                            ₹{{ product.original_price }}
+                        </span>
+                    {% endif %}
+
+                </div>
+
+                {% if product.discount %}
+
+                    <div class="discount">
+                        {{ product.discount }}% off
+                    </div>
+
+                {% endif %}
+
+                <button
+                    class="add-cart"
+                    data-product-id="{{ product.id }}"
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+
+            {% empty %}
+
+                <p>
+                    No products available.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+
+    <!-- ================= MORE PRODUCTS ================= -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Recommended for You
+        </h2>
+
+        <div class="products">
+
+            {% for product in products|slice:":10" %}
+
+            <div class="product-card">
+
+                <div class="product-image">
+
+                    {% if product.product_image %}
+
+                        <img
+                            src="{{ product.product_image }}"
+                            alt="{{ product.name }}"
+                        >
+
+                    {% endif %}
+
+                </div>
+
+                <div class="product-name">
+                    {{ product.name }}
+                </div>
+
+                <div class="price">
+                    ₹{{ product.price }}
+                </div>
+
+                <button
+                    class="add-cart"
+                    data-product-id="{{ product.id }}"
+                >
+                    Add to Cart
+                </button>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+</div>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <div class="footer-grid">
+
+        <div>
+            <h3>Get to Know Us</h3>
+            <p>About Us</p>
+            <p>Careers</p>
+            <p>Press Releases</p>
+        </div>
+
+        <div>
+            <h3>Make Money With Us</h3>
+            <p>Sell on ShopKart</p>
+            <p>Become an Affiliate</p>
+            <p>Advertise Products</p>
+        </div>
+
+        <div>
+            <h3>Customer Service</h3>
+            <p>Contact Us</p>
+            <p>Returns</p>
+            <p>Shipping</p>
+        </div>
+
+        <div>
+            <h3>ShopKart</h3>
+            <p>Your one-stop ecommerce marketplace.</p>
+        </div>
+
+    </div>
+
+</footer>
+
+
+<script>
+
+    // Basic cart interaction
+
+    document.querySelectorAll(".add-cart").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+            const productId = button.dataset.productId;
+
+            console.log(
+                "Add product:",
+                productId
+            );
+
+            button.innerText = "Added ✓";
+
+            setTimeout(() => {
+                button.innerText = "Add to Cart";
+            }, 1200);
+
+        });
+
+    });
+
+</script>
+
+</body>
+</html>

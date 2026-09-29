@@ -1,0 +1,12 @@
+[databases]
+ecommerce_db = host=127.0.0.1 port=5432 dbname=ecommerce_db user=ncvhome
+
+[pgbouncer]
+listen_addr = 0.0.0.0
+listen_port = 6432
+auth_type = any
+admin_users = ncvhome
+
+pool_mode = transaction
+max_client_conn = 500
+default_pool_size = 20

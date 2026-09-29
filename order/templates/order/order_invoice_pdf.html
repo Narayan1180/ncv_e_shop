@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Invoice #{{ order.id }}</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 0 0 22mm 0;
+      @bottom-center {
+        content: "Thank you for your business  ·  Page " counter(page) " of " counter(pages);
+        font-family: Helvetica, Arial, sans-serif;
+        font-size: 9px;
+        color: #94a3b8;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Helvetica, Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #1e293b;
+    }
+
+    /* ---------- Header band ---------- */
+    .header {
+      background: #4f46e5;
+      color: #ffffff;
+      padding: 32px 40px;
+    }
+    .header table { width: 100%; border-collapse: collapse; }
+    .header td { border: none; padding: 0; vertical-align: top; }
+    .brand { font-size: 20px; font-weight: bold; letter-spacing: 0.5px; }
+    .brand-sub { font-size: 11px; color: #c7d2fe; margin-top: 2px; }
+    .doc-title {
+      text-align: right;
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 4px;
+    }
+    .doc-number { text-align: right; font-size: 12px; color: #c7d2fe; margin-top: 2px; }
+
+    /* ---------- Content ---------- */
+    .content { padding: 32px 40px 0 40px; }
+
+    .meta { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+    .meta td { border: none; padding: 0; vertical-align: top; width: 50%; }
+    .label {
+      font-size: 9px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #94a3b8;
+      margin-bottom: 4px;
+    }
+    .value { font-size: 13px; color: #0f172a; }
+    .value-strong { font-size: 15px; font-weight: bold; color: #0f172a; }
+    .right { text-align: right; }
+
+    /* ---------- Badges ---------- */
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .badge-pending   { background: #fef3c7; color: #92400e; }
+    .badge-confirmed { background: #dbeafe; color: #1e40af; }
+    .badge-paid      { background: #dcfce7; color: #166534; }
+    .badge-cancelled { background: #fee2e2; color: #991b1b; }
+    .badge-failed    { background: #fee2e2; color: #991b1b; }
+    .badge-refunded  { background: #ede9fe; color: #5b21b6; }
+
+    /* ---------- Section titles ---------- */
+    .section-title {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #4f46e5;
+      border-bottom: 2px solid #e0e7ff;
+      padding-bottom: 6px;
+      margin: 26px 0 12px 0;
+    }
+
+    /* ---------- Detail table ---------- */
+    .details { width: 100%; border-collapse: collapse; }
+    .details td {
+      padding: 9px 0;
+      border-bottom: 1px solid #f1f5f9;
+      vertical-align: middle;
+    }
+    .details td.k { color: #64748b; width: 38%; }
+    .details td.v { color: #0f172a; font-weight: bold; }
+    .mono { font-family: "Courier New", monospace; font-size: 11px; }
+
+    /* ---------- Items table ---------- */
+    .items { width: 100%; border-collapse: collapse; }
+    .items th {
+      background: #f8fafc;
+      color: #475569;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 2px solid #e2e8f0;
+    }
+    .items td { padding: 11px 12px; border-bottom: 1px solid #f1f5f9; }
+    .items th.right, .items td.right { text-align: right; }
+
+    /* ---------- Total box ---------- */
+    .total-wrap { width: 100%; border-collapse: collapse; margin-top: 28px; }
+    .total-wrap td { border: none; padding: 0; }
+    .total-box {
+      background: #eef2ff;
+      border-left: 5px solid #4f46e5;
+      padding: 16px 20px;
+    }
+    .total-box table { width: 100%; border-collapse: collapse; }
+    .total-box td { border: none; padding: 0; vertical-align: middle; }
+    .total-label {
+      font-size: 11px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: #4338ca;
+    }
+    .total-amount { text-align: right; font-size: 26px; font-weight: bold; color: #312e81; }
+
+    .note {
+      margin-top: 32px;
+      font-size: 10px;
+      color: #94a3b8;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="header">
+    <table>
+      <tr>
+        <td>
+          <div class="brand">NCV SHOP</div>
+          <div class="brand-sub">yourcompany.com &nbsp;·&nbsp; support@yourcompany.com</div>
+        </td>
+        <td>
+          <div class="doc-title">INVOICE</div>
+          <div class="doc-number">#{{ order.id }}</div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="content">
+
+    <!-- Billed to / dates -->
+    <table class="meta">
+      <tr>
+        <td>
+          <div class="label">Billed to</div>
+          <div class="value-strong">{{ order.user.get_full_name|default:order.user.username }}</div>
+          <div class="value">{{ order.user.email }}</div>
+        </td>
+        <td class="right">
+          <div class="label">Invoice date</div>
+          <div class="value-strong">{{ order.created_at|date:"d M Y" }}</div>
+          <div class="value">{{ order.created_at|date:"h:i A" }}</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Status -->
+    <table class="meta">
+      <tr>
+        <td>
+          <div class="label">Order status</div>
+          <span class="badge badge-{{ order.status }}">{{ order.get_status_display }}</span>
+        </td>
+        <td class="right">
+          <div class="label">Payment status</div>
+          <span class="badge badge-{{ order.payment_status }}">{{ order.get_payment_status_display }}</span>
+        </td>
+      </tr>
+    </table>
+
+    <!-- Payment details -->
+    <div class="section-title">Payment details</div>
+    <table class="details">
+      <tr>
+        <td class="k">Razorpay Order ID</td>
+        <td class="v mono">{{ order.razorpay_order_id|default:"-" }}</td>
+      </tr>
+      <tr>
+        <td class="k">Razorpay Payment ID</td>
+        <td class="v mono">{{ order.razorpay_payment_id|default:"-" }}</td>
+      </tr>
+    </table>
+
+    <!-- Line items: shows automatically once you have an OrderItem model
+         with related_name="items"; otherwise this block is skipped -->
+    {% if order.items.all %}
+    <div class="section-title">Items</div>
+    <table class="items">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th class="right">Qty</th>
+          <th class="right">Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td class="right">{{ item.quantity }}</td>
+          <td class="right">₹{{ item.price }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+
+    <!-- Total -->
+    <table class="total-wrap">
+      <tr>
+        <td style="width: 45%;"></td>
+        <td>
+          <div class="total-box">
+            <table>
+              <tr>
+                <td class="total-label">Total amount</td>
+                <td class="total-amount">₹{{ order.total_amount }}</td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <div class="note">
+      This is a computer-generated invoice and does not require a signature.
+    </div>
+
+  </div>
+</body>
+</html>
