@@ -31,7 +31,7 @@ TWILIO_FROM_NUMBER = env("TWILIO_FROM_NUMBER")
 SENTRY_DSN = env("SENTRY_DSN", default="")
 
 SENTRY_ENVIRONMENT = env( "SENTRY_ENVIRONMENT", default="development", )
-print("hiii--",SENTRY_DSN,SENTRY_ENVIRONMENT)
+#print("hiii--",SENTRY_DSN,SENTRY_ENVIRONMENT)
 import sentry_sdk
 
 if SENTRY_DSN:
