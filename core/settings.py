@@ -51,7 +51,8 @@ SECRET_KEY = "django-insecure-$g36aduzoztm*l5=j9w#v^fm)_cs+q8p1p!zu^foq-!qbc-u*^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ "3.7.73.170",    "localhost", "127.0.0.1",]
+ALLOWED_HOSTS = [ "3.7.73.170", "localhost", "127.0.0.1", ]
+
 
 AUTH_USER_MODEL = "accounts.User"
 # Application definition
@@ -171,7 +172,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-#STATIC_URL = "static/"
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 # Default primary key field type
@@ -181,6 +181,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
+
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "accounts.authentications.CookieJWTAuthentication",

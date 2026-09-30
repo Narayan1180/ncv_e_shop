@@ -21,3 +21,5 @@ staticfiles/
 
 data_inegstion/data_set1/
 data_inegstion/data_set2/
+
+ecommerce_db.dump
