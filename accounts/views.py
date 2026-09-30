@@ -45,7 +45,9 @@ class LoginView(APIView):
         # authenticate user
         ...
 class RegisterView(APIView):
-
+     
+    permission_classes=[AllowAny]
+    authentication_classes=[]
     def post(self,requests):
         email=requests.data["email"]
         password=requests.data["password"]
